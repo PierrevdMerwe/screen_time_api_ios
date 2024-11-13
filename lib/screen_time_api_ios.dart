@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'screen_time_api_ios_platform_interface.dart';
 import 'screen_time_api_ios_method_channel.dart';
 

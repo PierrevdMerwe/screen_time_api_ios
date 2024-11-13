@@ -11,6 +11,7 @@ class MethodChannelScreenTimeApiIos extends ScreenTimeApiIosPlatform {
       final result = await methodChannel.invokeMethod<bool>('requestPermission');
       return result ?? false;
     } catch (e) {
+      debugPrint('Error requesting permission: $e');
       return false;
     }
   }

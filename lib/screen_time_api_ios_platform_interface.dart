@@ -14,10 +14,6 @@ abstract class ScreenTimeApiIosPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
-
   Future<bool> requestPermission() {
     throw UnimplementedError('requestPermission() has not been implemented.');
   }

@@ -1,18 +1,18 @@
-
 import 'screen_time_api_ios_platform_interface.dart';
 import 'screen_time_api_ios_method_channel.dart';
 
 class ScreenTimeApiIos {
-  Future<String?> getPlatformVersion() {
-    return ScreenTimeApiIosPlatform.instance.getPlatformVersion();
+  Future<bool> requestPermission() async {
+    final instance = ScreenTimeApiIosPlatform.instance as MethodChannelScreenTimeApiIos;
+    return await instance.requestPermission();
   }
 
-  Future selectAppsToDiscourage() async {
+  Future<void> selectAppsToDiscourage() async {
     final instance = ScreenTimeApiIosPlatform.instance as MethodChannelScreenTimeApiIos;
     await instance.selectAppsToDiscourage();
   }
 
-  Future encourageAll() async {
+  Future<void> encourageAll() async {
     final instance = ScreenTimeApiIosPlatform.instance as MethodChannelScreenTimeApiIos;
     await instance.encourageAll();
   }

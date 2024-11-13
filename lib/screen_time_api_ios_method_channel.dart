@@ -1,25 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
 import 'screen_time_api_ios_platform_interface.dart';
 
-/// An implementation of [ScreenTimeApiIosPlatform] that uses method channels.
 class MethodChannelScreenTimeApiIos extends ScreenTimeApiIosPlatform {
-  /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('screen_time_api_ios');
 
-  @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<bool> requestPermission() async {
+    try {
+      final result = await methodChannel.invokeMethod<bool>('requestPermission');
+      return result ?? false;
+    } catch (e) {
+      return false;
+    }
   }
 
-  Future selectAppsToDiscourage() async {
+  Future<void> selectAppsToDiscourage() async {
     await methodChannel.invokeMethod('selectAppsToDiscourage');
   }
 
-  Future encourageAll() async {
+  Future<void> encourageAll() async {
     await methodChannel.invokeMethod('encourageAll');
   }
 }

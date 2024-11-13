@@ -12,15 +12,21 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "selectAppsToDiscourage":
+        case "requestPermission":
             Task {
-                // スクリーンタイムAPIの認証
-                try await FamilyControlModel.shared.authorize()
-                showController()
+                do {
+                    try await FamilyControlModel.shared.authorize()
+                    result(true)
+                } catch {
+                    result(FlutterError(code: "PERMISSION_ERROR",
+                                      message: error.localizedDescription,
+                                      details: nil))
+                }
             }
+        case "selectAppsToDiscourage":
+            showController()
             result(nil)
         case "encourageAll":
-            // 全部解放する
             FamilyControlModel.shared.encourageAll();
             FamilyControlModel.shared.saveSelection(selection: FamilyActivitySelection())
             result(nil)
@@ -42,7 +48,6 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
                 return w.isHidden == false
             }).first?.rootViewController as? FlutterViewController
             
-            // アプリ選択のUIを出す
             let selectAppVC: UIViewController = UIHostingController(rootView: ContentView())
             selectAppVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
                 barButtonSystemItem: .close,

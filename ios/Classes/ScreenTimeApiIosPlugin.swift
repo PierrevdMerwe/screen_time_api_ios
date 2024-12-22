@@ -73,24 +73,20 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
     }
     
     func showController() {
-        DispatchQueue.main.async {
-            let scenes = UIApplication.shared.connectedScenes
-            let windowScene = scenes.first as? UIWindowScene
-            let windows = windowScene?.windows
-            let controller = windows?.filter({ (w) -> Bool in
-                return w.isHidden == false
-            }).first?.rootViewController as? FlutterViewController
-            
-            let selectAppVC: UIViewController = UIHostingController(rootView: ContentView())
-            selectAppVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
-                barButtonSystemItem: .close,
-                target: self,
-                action: #selector(self.onPressClose)
-            )
-            let naviVC = UINavigationController(rootViewController: selectAppVC)
-            controller?.present(naviVC, animated: true, completion: nil)
-        }
+    DispatchQueue.main.async {
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let windows = windowScene?.windows
+        let controller = windows?.filter({ (w) -> Bool in
+            return w.isHidden == false
+        }).first?.rootViewController as? FlutterViewController
+        
+        let selectAppVC: UIViewController = UIHostingController(rootView: ContentView())
+        let naviVC = UINavigationController(rootViewController: selectAppVC)
+        naviVC.modalPresentationStyle = .formSheet
+        controller?.present(naviVC, animated: true, completion: nil)
     }
+}
     
     func dismiss(){
         DispatchQueue.main.async {

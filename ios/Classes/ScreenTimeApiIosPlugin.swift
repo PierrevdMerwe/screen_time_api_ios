@@ -68,27 +68,7 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    @objc func onPressClose(){
-        dismiss()
-    }
-    
     func showController() {
-    DispatchQueue.main.async {
-        let scenes = UIApplication.shared.connectedScenes
-        let windowScene = scenes.first as? UIWindowScene
-        let windows = windowScene?.windows
-        let controller = windows?.filter({ (w) -> Bool in
-            return w.isHidden == false
-        }).first?.rootViewController as? FlutterViewController
-        
-        let selectAppVC: UIViewController = UIHostingController(rootView: ContentView())
-        let naviVC = UINavigationController(rootViewController: selectAppVC)
-        naviVC.modalPresentationStyle = .formSheet
-        controller?.present(naviVC, animated: true, completion: nil)
-    }
-}
-    
-    func dismiss(){
         DispatchQueue.main.async {
             let scenes = UIApplication.shared.connectedScenes
             let windowScene = scenes.first as? UIWindowScene
@@ -96,7 +76,11 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
             let controller = windows?.filter({ (w) -> Bool in
                 return w.isHidden == false
             }).first?.rootViewController as? FlutterViewController
-            controller?.dismiss(animated: true, completion: nil)
+            
+            let selectAppVC: UIViewController = UIHostingController(rootView: ContentView())
+            let naviVC = UINavigationController(rootViewController: selectAppVC)
+            naviVC.modalPresentationStyle = .formSheet
+            controller?.present(naviVC, animated: true, completion: nil)
         }
     }
 }

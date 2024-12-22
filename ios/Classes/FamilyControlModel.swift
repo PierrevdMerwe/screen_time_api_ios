@@ -37,23 +37,6 @@ class FamilyControlModel: ObservableObject {
         }
     }
     
-    func saveAndDismiss(selectedActivities: [ActivityItem]) {
-        var selection = FamilyActivitySelection()
-        
-        // Add selected applications
-        for activity in selectedActivities {
-            if let appToken = activity.applicationToken {
-                selection.applicationTokens.insert(appToken)
-            }
-            if let categoryToken = activity.categoryToken {
-                selection.categoryTokens.insert(categoryToken)
-            }
-        }
-        
-        // Update selection
-        selectionToDiscourage = selection
-    }
-    
     func authorize() async throws {
         try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
     }

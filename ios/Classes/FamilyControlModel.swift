@@ -41,13 +41,13 @@ class FamilyControlModel: ObservableObject {
         var selection = FamilyActivitySelection()
         
         // Add selected applications
-        for activity in selectedActivities where !activity.isCategory {
-            selection.applicationTokens.insert(activity.token)
-        }
-        
-        // Add selected categories
-        for activity in selectedActivities where activity.isCategory {
-            selection.categoryTokens.insert(activity.token)
+        for activity in selectedActivities {
+            if let appToken = activity.applicationToken {
+                selection.applicationTokens.insert(appToken)
+            }
+            if let categoryToken = activity.categoryToken {
+                selection.categoryTokens.insert(categoryToken)
+            }
         }
         
         // Update selection

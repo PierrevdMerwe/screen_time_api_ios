@@ -11,16 +11,54 @@ struct ActivityItem: Identifiable, Hashable {
     let name: String
     let icon: String
     let isCategory: Bool
-    let token: FamilyActivitySelection.ActivityToken  // Changed to correct type
+    let applicationToken: ApplicationToken?
+    let categoryToken: CategoryToken?
     var isSelected: Bool
     
-    // Implement Hashable
+    // Initialize for an app
+    init(application: ApplicationToken, isSelected: Bool = false) {
+        self.id = UUID()
+        self.name = application.localizedDisplayName ?? "Unknown App"
+        self.icon = "📱"
+        self.isCategory = false
+        self.applicationToken = application
+        self.categoryToken = nil
+        self.isSelected = isSelected
+    }
+    
+    // Initialize for a category
+    init(category: CategoryToken, isSelected: Bool = false) {
+        self.id = UUID()
+        self.name = category.localizedDisplayName ?? "Unknown Category"
+        self.icon = Self.categoryIcon(for: category.localizedDisplayName ?? "")
+        self.isCategory = true
+        self.applicationToken = nil
+        self.categoryToken = category
+        self.isSelected = isSelected
+    }
+    
     static func == (lhs: ActivityItem, rhs: ActivityItem) -> Bool {
         lhs.id == rhs.id
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+    
+    private static func categoryIcon(for category: String) -> String {
+        switch category.lowercased() {
+        case let name where name.contains("social"): return "💬"
+        case let name where name.contains("game"): return "🎮"
+        case let name where name.contains("entertainment"): return "🎬"
+        case let name where name.contains("creativity"): return "🎨"
+        case let name where name.contains("education"): return "📚"
+        case let name where name.contains("fitness"): return "🏃"
+        case let name where name.contains("reading"): return "📖"
+        case let name where name.contains("productivity"): return "💼"
+        case let name where name.contains("shopping"): return "🛍️"
+        case let name where name.contains("travel"): return "✈️"
+        default: return "📱"
+        }
     }
 }
 
@@ -91,16 +129,12 @@ struct ContentView: View {
         // Load saved selection
         let savedSelection = model.savedSelection() ?? FamilyActivitySelection()
         
-        // Convert available applications and categories to ActivityItems
         var items: [ActivityItem] = []
         
         // Add applications
         for token in FamilyActivitySelection.availableApps {
             items.append(ActivityItem(
-                name: token.localizedDisplayName ?? "Unknown App",
-                icon: "📱", // Default app icon
-                isCategory: false,
-                token: token,
+                application: token,
                 isSelected: savedSelection.applicationTokens.contains(token)
             ))
         }
@@ -108,10 +142,7 @@ struct ContentView: View {
         // Add categories
         for token in FamilyActivitySelection.availableCategories {
             items.append(ActivityItem(
-                name: token.localizedDisplayName ?? "Unknown Category",
-                icon: categoryIcon(for: token.localizedDisplayName ?? ""),
-                isCategory: true,
-                token: token,
+                category: token,
                 isSelected: savedSelection.categoryTokens.contains(token)
             ))
         }
@@ -134,22 +165,6 @@ struct ContentView: View {
         }
         if let filteredIndex = filteredActivities.firstIndex(where: { $0.id == activity.id }) {
             filteredActivities[filteredIndex].isSelected.toggle()
-        }
-    }
-    
-    private func categoryIcon(for category: String) -> String {
-        switch category.lowercased() {
-        case let name where name.contains("social"): return "💬"
-        case let name where name.contains("game"): return "🎮"
-        case let name where name.contains("entertainment"): return "🎬"
-        case let name where name.contains("creativity"): return "🎨"
-        case let name where name.contains("education"): return "📚"
-        case let name where name.contains("fitness"): return "🏃"
-        case let name where name.contains("reading"): return "📖"
-        case let name where name.contains("productivity"): return "💼"
-        case let name where name.contains("shopping"): return "🛍️"
-        case let name where name.contains("travel"): return "✈️"
-        default: return "📱"
         }
     }
 }

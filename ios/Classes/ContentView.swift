@@ -11,8 +11,13 @@ struct ActivityItem: Identifiable, Hashable {
     let name: String
     let icon: String
     let isCategory: Bool
-    let token: ActivityToken
+    let token: FamilyActivitySelection.ActivityToken  // Changed to correct type
     var isSelected: Bool
+    
+    // Implement Hashable
+    static func == (lhs: ActivityItem, rhs: ActivityItem) -> Bool {
+        lhs.id == rhs.id
+    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

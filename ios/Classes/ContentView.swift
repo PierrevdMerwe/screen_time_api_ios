@@ -11,48 +11,36 @@ struct ContentView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationView {
+        ZStack(alignment: .top) {
+            // Main FamilyActivityPicker
             FamilyActivityPicker(selection: $model.selectionToDiscourage)
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle("Choose Activities")
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarRole(.navigationStack)
-                .toolbarBackground(Color(UIColor.systemBackground), for: .navigationBar)
-                .toolbar {
-                    // Leading button (X)
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            print("Cancel tapped")  // Debug print
-                            model.selectionToDiscourage = FamilyActivitySelection()
-                            dismiss()
-                        }) {
-                            Text("X")
-                                .foregroundColor(.blue)
-                        }
-                    }
-                    
-                    // Trailing button (Done)
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            print("Done tapped")  // Debug print
-                            model.saveSelection(selection: model.selectionToDiscourage)
-                            dismiss()
-                        }) {
-                            Text("Done")
-                                .foregroundColor(.blue)
-                        }
-                    }
+            
+            // Custom overlay for buttons
+            HStack {
+                Button(action: {
+                    print("Cancel tapped")
+                    model.selectionToDiscourage = FamilyActivitySelection()
+                    dismiss()
+                }) {
+                    Text("X")
+                        .foregroundColor(.blue)
+                        .padding()
                 }
-        }
-        // Force dark mode
-        .preferredColorScheme(.dark)
-        // Prevent navigation bar from hiding
-        .onAppear {
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                windowScene.windows.forEach { window in
-                    window.rootViewController?.navigationController?.setNavigationBarHidden(false, animated: false)
+                
+                Spacer()
+                
+                Button(action: {
+                    print("Done tapped")
+                    model.saveSelection(selection: model.selectionToDiscourage)
+                    dismiss()
+                }) {
+                    Text("Done")
+                        .foregroundColor(.blue)
+                        .padding()
                 }
             }
+            .padding(.horizontal)
+            .padding(.top, 8)
         }
     }
 }

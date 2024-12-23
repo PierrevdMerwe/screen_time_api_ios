@@ -77,18 +77,8 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
         
         let selectAppVC = UIHostingController(rootView: ContentView())
         let naviVC = UINavigationController(rootViewController: selectAppVC)
-        naviVC.modalPresentationStyle = .fullScreen // Changed to fullScreen
-        naviVC.isNavigationBarHidden = false // Ensure nav bar is visible
-        
-        // Configure navigation bar appearance
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithDefaultBackground()
-        appearance.backgroundColor = .black
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        
-        naviVC.navigationBar.standardAppearance = appearance
-        naviVC.navigationBar.scrollEdgeAppearance = appearance
-        naviVC.navigationBar.compactAppearance = appearance
+        naviVC.modalPresentationStyle = .formSheet
+        naviVC.isNavigationBarHidden = true // Hide the navigation bar since we're using custom buttons
         
         controller.present(naviVC, animated: true, completion: nil)
     }

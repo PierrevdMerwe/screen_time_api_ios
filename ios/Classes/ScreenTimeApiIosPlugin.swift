@@ -80,7 +80,6 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
             let selectAppVC: UIViewController = UIHostingController(rootView: ContentView())
             let naviVC = UINavigationController(rootViewController: selectAppVC)
             naviVC.modalPresentationStyle = .formSheet
-            naviVC.isNavigationBarHidden = true
             controller?.present(naviVC, animated: true, completion: nil)
         }
     }

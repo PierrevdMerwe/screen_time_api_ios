@@ -11,26 +11,30 @@ struct ContentView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        FamilyActivityPicker(selection: $model.selectionToDiscourage)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        model.selectionToDiscourage = FamilyActivitySelection()
-                        dismiss()
+        NavigationView {
+            FamilyActivityPicker(selection: $model.selectionToDiscourage)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle("") // Empty title to prevent duplication
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            model.selectionToDiscourage = FamilyActivitySelection()
+                            dismiss()
+                        }) {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.blue)
+                        }
                     }
-                    .foregroundColor(.blue)
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        // Explicitly save the current selection
-                        model.saveSelection(selection: model.selectionToDiscourage)
-                        dismiss()
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") {
+                            model.saveSelection(selection: model.selectionToDiscourage)
+                            dismiss()
+                        }
+                        .foregroundColor(.blue)
                     }
-                    .foregroundColor(.blue)
                 }
-            }
+        }
     }
 }
 

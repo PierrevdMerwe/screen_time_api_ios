@@ -1,26 +1,19 @@
-//
-//  ContentView.swift
-//  screen_time_api_ios
-//
-
 import SwiftUI
 import FamilyControls
 
 struct ContentView: View {
     @StateObject var model = FamilyControlModel.shared
-    @Environment(\.dismiss) var dismiss
+    let completion: (Bool) -> Void
     
     var body: some View {
         ZStack(alignment: .top) {
-            // Main FamilyActivityPicker
             FamilyActivityPicker(selection: $model.selectionToDiscourage)
             
-            // Custom overlay for buttons
             HStack {
                 Button(action: {
-                    print("Cancel tapped")
+                    debugPrint("Cancel tapped")
                     model.selectionToDiscourage = FamilyActivitySelection()
-                    dismiss()
+                    completion(false)
                 }) {
                     Text("X")
                         .foregroundColor(.blue)
@@ -30,9 +23,9 @@ struct ContentView: View {
                 Spacer()
                 
                 Button(action: {
-                    print("Done tapped")
+                    debugPrint("Done tapped")
                     model.saveSelection(selection: model.selectionToDiscourage)
-                    dismiss()
+                    completion(true)
                 }) {
                     Text("Done")
                         .foregroundColor(.blue)
@@ -42,11 +35,5 @@ struct ContentView: View {
             .padding(.horizontal)
             .padding(.top, 8)
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

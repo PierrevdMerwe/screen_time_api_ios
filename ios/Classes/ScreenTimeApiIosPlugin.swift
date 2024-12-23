@@ -42,16 +42,13 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
                 
                 NSLog("SCREENTIME_DEBUG: Initial status: \(status)")
                 
-                // Always request authorization
                 NSLog("SCREENTIME_DEBUG: Requesting authorization...")
                 try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
                 
-                // Check status again after request
                 let newStatus = center.authorizationStatus
                 NSLog("SCREENTIME_DEBUG: New status after request: \(newStatus)")
                 
                 DispatchQueue.main.async {
-                    // Only return true if explicitly approved
                     let isApproved = (newStatus == .approved)
                     NSLog("SCREENTIME_DEBUG: Returning result: \(isApproved)")
                     result(isApproved)
@@ -69,18 +66,20 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
     }
     
     func showController() {
-    DispatchQueue.main.async {
-        guard let scenes = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let controller = scenes.windows.first?.rootViewController as? FlutterViewController else {
-            return
+        DispatchQueue.main.async { [weak self] in
+            guard let scenes = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let controller = scenes.windows.first?.rootViewController as? FlutterViewController else {
+                debugPrint("Could not get Flutter view controller")
+                return
+            }
+            
+            let selectAppVC = UIHostingController(rootView: ContentView(completion: { successful in
+                controller.dismiss(animated: true) {
+                    debugPrint("View controller dismissed with success: \(successful)")
+                }
+            }))
+            selectAppVC.modalPresentationStyle = .formSheet
+            controller.present(selectAppVC, animated: true)
         }
-        
-        let selectAppVC = UIHostingController(rootView: ContentView())
-        let naviVC = UINavigationController(rootViewController: selectAppVC)
-        naviVC.modalPresentationStyle = .formSheet
-        naviVC.isNavigationBarHidden = true // Hide the navigation bar since we're using custom buttons
-        
-        controller.present(naviVC, animated: true, completion: nil)
     }
-}
 }

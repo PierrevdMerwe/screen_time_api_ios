@@ -48,9 +48,24 @@ class FamilyControlModel: ObservableObject {
     }
     
     func saveSelection(selection: FamilyActivitySelection) {
-        let defaults = UserDefaults.standard
-        defaults.set(try? encoder.encode(selection), forKey: userDefaultsKey)
-    }
+    print("Starting to save selection")
+    
+    let applications = selection.applicationTokens
+    let categories = selection.categoryTokens
+    
+    print("Applications to save: \(applications)")
+    print("Categories to save: \(categories)")
+    
+    store.shield.applications = applications.isEmpty ? nil : applications
+    store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(categories)
+    store.shield.webDomainCategories = ShieldSettings.ActivityCategoryPolicy.specific(categories)
+    
+    // Save to UserDefaults
+    let defaults = UserDefaults.standard
+    defaults.set(try? encoder.encode(selection), forKey: userDefaultsKey)
+    
+    print("Finished saving selection")
+}
     
     func savedSelection() -> FamilyActivitySelection? {
         let defaults = UserDefaults.standard

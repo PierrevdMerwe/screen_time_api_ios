@@ -69,18 +69,28 @@ public class ScreenTimeApiIosPlugin: NSObject, FlutterPlugin {
     }
     
     func showController() {
-        DispatchQueue.main.async {
-            let scenes = UIApplication.shared.connectedScenes
-            let windowScene = scenes.first as? UIWindowScene
-            let windows = windowScene?.windows
-            let controller = windows?.filter({ (w) -> Bool in
-                return w.isHidden == false
-            }).first?.rootViewController as? FlutterViewController
-            
-            let selectAppVC: UIViewController = UIHostingController(rootView: ContentView())
-            let naviVC = UINavigationController(rootViewController: selectAppVC)
-            naviVC.modalPresentationStyle = .formSheet
-            controller?.present(naviVC, animated: true, completion: nil)
+    DispatchQueue.main.async {
+        guard let scenes = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let controller = scenes.windows.first?.rootViewController as? FlutterViewController else {
+            return
         }
+        
+        let selectAppVC = UIHostingController(rootView: ContentView())
+        let naviVC = UINavigationController(rootViewController: selectAppVC)
+        naviVC.modalPresentationStyle = .fullScreen // Changed to fullScreen
+        naviVC.isNavigationBarHidden = false // Ensure nav bar is visible
+        
+        // Configure navigation bar appearance
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.backgroundColor = .black
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        naviVC.navigationBar.standardAppearance = appearance
+        naviVC.navigationBar.scrollEdgeAppearance = appearance
+        naviVC.navigationBar.compactAppearance = appearance
+        
+        controller.present(naviVC, animated: true, completion: nil)
     }
+}
 }

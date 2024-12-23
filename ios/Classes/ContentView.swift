@@ -9,29 +9,28 @@ import FamilyControls
 struct ContentView: View {
     @StateObject var model = FamilyControlModel.shared
     @Environment(\.dismiss) var dismiss
-
+    
     var body: some View {
-        NavigationView {
-            FamilyActivityPicker(selection: $model.selectionToDiscourage)
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle("Choose Activities")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
-                        .foregroundColor(.blue)
+        FamilyActivityPicker(selection: $model.selectionToDiscourage)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        model.selectionToDiscourage = FamilyActivitySelection()
+                        dismiss()
                     }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Done") {
-                            model.saveSelection(selection: model.selectionToDiscourage)
-                            dismiss()
-                        }
-                        .foregroundColor(.blue)
-                    }
+                    .foregroundColor(.blue)
                 }
-        }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        // Explicitly save the current selection
+                        model.saveSelection(selection: model.selectionToDiscourage)
+                        dismiss()
+                    }
+                    .foregroundColor(.blue)
+                }
+            }
     }
 }
 
